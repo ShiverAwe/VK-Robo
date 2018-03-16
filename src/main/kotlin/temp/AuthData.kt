@@ -9,6 +9,7 @@ import java.util.*
 object AuthData {
     val APP_ID = 6383627
     val CLIENT_SECRET = "ZbOMwURj5cZ6P612exgc"
+    val SERVICE_TOKEN = "db52d295db52d295db52d295e6db33ba9eddb52db52d29581dd240242f23149b23daa6f"
     val REDIRECT_URI = "https://oauth.vk.com/blank.html"
     val API_VERSION = "5.21"
     val DISPLAY = "page"
@@ -23,12 +24,8 @@ object AuthData {
         return actor
     }
 
-    fun getServiceActor(token: String): ServiceActor {
-        val authResponse = Requests.vk.oauth()
-                .serviceClientCredentialsFlow(APP_ID, CLIENT_SECRET)
-                .execute()
-        val actor = ServiceActor(APP_ID, CLIENT_SECRET, authResponse.accessToken)
-        return actor
+    fun getServiceActor(): ServiceActor {
+        return ServiceActor(APP_ID, CLIENT_SECRET, SERVICE_TOKEN)
     }
 
     fun getCode(): String {

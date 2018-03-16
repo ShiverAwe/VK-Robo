@@ -2,8 +2,10 @@ package temp
 
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
+import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.httpclient.HttpTransportClient
 import com.vk.api.sdk.queries.groups.GroupField
+import java.lang.System.err
 
 object Requests {
 
@@ -15,19 +17,24 @@ object Requests {
         val map = HashMap<String, HashSet<String>>()
         val userNames: Map<Int, String> = userName(actor, *userIds.map { it.toString() }.toTypedArray())
         userIds.forEach { userId ->
-            val userGroups: Set<String> = vk
-                    .groups()
-                    .getExtended(actor)
-                    .userId(userId)
-                    .fields(GroupField.SCREEN_NAME)
-                    .execute()
-                    .items
-                    .map { it.screenName }
-                    .toSet()
-            userGroups.forEach { groupName ->
-                userNames[userId]?.let {
-                    map.getOrPut(groupName, { HashSet() }).add(it)
+            try {
+                val userGroups: Set<String> = vk
+                        .groups()
+                        .getExtended(actor)
+                        .userId(userId)
+                        .fields(GroupField.SCREEN_NAME)
+                        .execute()
+                        .items
+                        .map { it.screenName }
+                        .toSet()
+                userGroups.forEach { groupName ->
+                    userNames[userId]?.let {
+                        map.getOrPut(groupName, { HashSet() }).add(it)
+                    }
                 }
+                Thread.sleep(500)
+            } catch (e: ApiException) {
+                err.println("Could not get groups of ${userNames[userId]}")
             }
         }
         return map
