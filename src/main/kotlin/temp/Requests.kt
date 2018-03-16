@@ -4,7 +4,6 @@ import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.httpclient.HttpTransportClient
 import com.vk.api.sdk.queries.groups.GroupField
-import com.vk.api.sdk.queries.users.UserField
 
 object Requests {
 
@@ -25,8 +24,18 @@ object Requests {
                     .map { it.screenName }
                     .toSet()
             userGroups.forEach { groupName ->
-                userNames[userId]?.let { map.getOrPut(groupName, { HashSet() }).add(it) }
+                userNames[userId]?.let {
+                    map.getOrPut(groupName, { HashSet() }).add(it)
+                }
             }
+        }
+        return map
+    }
+
+    fun <K, T> List<T>.mapFor(action: T.() -> K): Map<K, T> {
+        val map = HashMap<K, T>()
+        forEach {
+            map.put(it.action(), it)
         }
         return map
     }
@@ -34,9 +43,6 @@ object Requests {
     fun userName(actor: UserActor, vararg userIds: String): Map<Int, String> {
         val users = vk.users().get(actor)
                 .userIds(userIds.toList())
-                .fields(UserField.ABOUT,
-                        UserField.CITY,
-                        UserField.LAST_SEEN)
                 .execute()
         return Utils.userListToMapById(users)
     }

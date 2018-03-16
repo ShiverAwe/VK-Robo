@@ -11,7 +11,7 @@ object AuthData {
     val REDIRECT_URI = "https://oauth.vk.com/blank.html"
     val API_VERSION = "5.21"
     val DISPLAY = "page"
-    val PERMISSIONS = "photos,messages"
+    val PERMISSIONS = "friends,status"
     val RESPONSE_TYPE = "code"
 
     fun getActor(): UserActor {
