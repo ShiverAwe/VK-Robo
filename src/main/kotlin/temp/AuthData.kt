@@ -1,5 +1,6 @@
 package temp
 
+import com.vk.api.sdk.client.actors.ServiceActor
 import com.vk.api.sdk.client.actors.UserActor
 import java.awt.Desktop
 import java.net.URL
@@ -14,22 +15,39 @@ object AuthData {
     val PERMISSIONS = "friends,status"
     val RESPONSE_TYPE = "code"
 
-    fun getActor(): UserActor {
-        val sc = Scanner(System.`in`)
-        openAuthPage()
-        val authUrl = sc.nextLine()
-        val properties: Map<String, String> = getProperties(authUrl)
-        val code: String = properties["code"] ?: "null"
-
+    fun getActor(code: String): UserActor {
         val authResponse = Requests.vk.oauth()
                 .userAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, code)
                 .execute()
-
         val actor = UserActor(authResponse.userId, authResponse.accessToken)
-
         return actor
     }
 
+    fun getServiceActor(token: String): ServiceActor {
+        val authResponse = Requests.vk.oauth()
+                .serviceClientCredentialsFlow(APP_ID, CLIENT_SECRET)
+                .execute()
+        val actor = ServiceActor(APP_ID, CLIENT_SECRET, authResponse.accessToken)
+        return actor
+    }
+
+    fun getCode(): String {
+        val sc = Scanner(System.`in`)
+        openAuthPage("code")
+        val authUrl = sc.nextLine()
+        val properties: Map<String, String> = getProperties(authUrl)
+        val code: String = properties["code"] ?: "null"
+        return code
+    }
+
+    fun getToken(): String {
+        val sc = Scanner(System.`in`)
+        openAuthPage("token")
+        val authUrl = sc.nextLine()
+        val properties: Map<String, String> = getProperties(authUrl)
+        val code: String = properties["auth_token"] ?: "null"
+        return code
+    }
 
     private fun getProperties(query: String): Map<String, String> {
         val params: List<String> = query.trim().split("[&#]".toRegex())
@@ -45,17 +63,19 @@ object AuthData {
     }
 
 
-    private val AUTH_URL = ("https://oauth.vk.com/authorize"
+    private fun authUrl(responseType: String) = ("https://oauth.vk.com/authorize"
             + "?client_id=${APP_ID}"
             + "&scope=${PERMISSIONS}"
             + "&redirect_uri=${REDIRECT_URI}"
             + "&display=${DISPLAY}"
             + "&v=${API_VERSION}"
-            + "&response_type=${RESPONSE_TYPE}")
+            + "&response_type=${responseType}")
 
-    private fun openAuthPage() {
-        val reqUrl = AUTH_URL
+    private fun openAuthPage(responseType: String) {
+        val reqUrl = authUrl(responseType)
+        println(reqUrl)
         Desktop.getDesktop().browse(URL(reqUrl).toURI())
     }
+
 
 }

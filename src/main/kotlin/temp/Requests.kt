@@ -8,6 +8,7 @@ import com.vk.api.sdk.queries.groups.GroupField
 object Requests {
 
     val transportClient = HttpTransportClient.getInstance()
+
     val vk = VkApiClient(transportClient)
 
     fun groupsStatsForMultiUsers(actor: UserActor, vararg userIds: Int): Map<String, Set<String>> {
