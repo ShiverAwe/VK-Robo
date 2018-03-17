@@ -1,8 +1,17 @@
+# Directories for compile to
 build/
 out/
-.gradle/
-gradle/
+
+# IDEA files
+*.iml
+*.ipr
 .idea/
 
+# Gradle files
+.gradle/
+gradle/
 gradlew.bat
 gradlew
+
+# Credentials for vk app
+vk_app.properties
