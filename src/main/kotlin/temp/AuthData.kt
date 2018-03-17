@@ -2,6 +2,7 @@ package temp
 
 import com.vk.api.sdk.client.actors.ServiceActor
 import com.vk.api.sdk.client.actors.UserActor
+import com.vk.api.sdk.httpclient.HttpTransportClient
 import java.awt.Desktop
 import java.net.URL
 import java.util.*
@@ -15,6 +16,8 @@ object AuthData {
     val DISPLAY = "page"
     val PERMISSIONS = "friends,status"
     val RESPONSE_TYPE = "code"
+
+    val transportClient = HttpTransportClient.getInstance()
 
     fun getActor(code: String): UserActor {
         val authResponse = Requests.vk.oauth()

@@ -13,7 +13,14 @@ object Requests {
 
     val vk = VkApiClient(transportClient)
 
-    fun groupsStatsForMultiUsers(actor: UserActor, vararg userIds: Int): Map<String, Set<String>> {
+    /**
+     * This method
+     * 1. gets all groups of specified users
+     * 2. creates a map, where key is a group name
+     *    and value is list of users from specified users
+     *    which are subscribed to that group
+     */
+    fun getGroupsOfUsers(actor: UserActor, vararg userIds: Int): Map<String, Set<String>> {
         val map = HashMap<String, HashSet<String>>()
         val userNames: Map<Int, String> = userName(actor, *userIds.map { it.toString() }.toTypedArray())
         userIds.forEach { userId ->
@@ -35,6 +42,8 @@ object Requests {
                 Thread.sleep(500)
             } catch (e: ApiException) {
                 err.println("Could not get groups of ${userNames[userId]}")
+            } catch (e: Exception) {
+                err.println("Some problem with user ${userNames[userId]}")
             }
         }
         return map
@@ -46,6 +55,25 @@ object Requests {
             map.put(it.action(), it)
         }
         return map
+    }
+
+    fun getMembersOfGroup(actor: UserActor, group: String): IntArray {
+        return vk
+                .groups()
+                .getMembers(actor)
+                .groupId(group)
+                .execute()
+                .items
+                .toIntArray()
+    }
+
+    fun getFriendsOfUser(actor: UserActor, user: Int): IntArray {
+        return Requests.vk
+                .friends()
+                .get(actor)
+                .userId(user)
+                .execute()
+                .items.toIntArray()
     }
 
     fun userName(actor: UserActor, vararg userIds: String): Map<Int, String> {
