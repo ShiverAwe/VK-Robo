@@ -49,22 +49,13 @@ object Requests {
         return map
     }
 
+
     fun <K, T> List<T>.mapFor(action: T.() -> K): Map<K, T> {
         val map = HashMap<K, T>()
         forEach {
             map.put(it.action(), it)
         }
         return map
-    }
-
-    fun getMembersOfGroup(actor: UserActor, group: String): IntArray {
-        return vk
-                .groups()
-                .getMembers(actor)
-                .groupId(group)
-                .execute()
-                .items
-                .toIntArray()
     }
 
     fun getFriendsOfUser(actor: UserActor, user: Int): IntArray {
