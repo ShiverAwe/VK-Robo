@@ -2,6 +2,7 @@ package temp
 
 import com.vk.api.sdk.objects.users.UserXtrCounters
 import java.util.*
+import kotlin.collections.HashMap
 
 object Utils {
 
@@ -17,6 +18,19 @@ object Utils {
         val entrylist: List<Map.Entry<K, V>> = map.entries.toList()
         Collections.sort(entrylist, { v1, v2 -> compare(v1.value, v2.value) })
         entrylist.forEach { println(it) }
+    }
+
+    fun extractWords(text: String): List<String> {
+        return text
+                .split("""[^a-zA-Z0-9а-яА-Я]""".toRegex())
+                .filter { it.isNotEmpty() }
+                .map { it.toLowerCase() }
+    }
+
+    fun countItems(items: List<String>): HashMap<String, Int> {
+        val counter = Counter<String>()
+        counter.put(*items.toTypedArray())
+        return counter.get()
     }
 
 }
