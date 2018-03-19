@@ -26,11 +26,4 @@ object Utils {
                 .filter { it.isNotEmpty() }
                 .map { it.toLowerCase() }
     }
-
-    fun countItems(items: List<String>): HashMap<String, Int> {
-        val counter = Counter<String>()
-        counter.put(*items.toTypedArray())
-        return counter.get()
-    }
-
 }
