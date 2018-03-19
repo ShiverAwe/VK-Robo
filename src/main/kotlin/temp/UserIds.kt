@@ -14,6 +14,7 @@ object UserIds {
             "edmitriev" to 260138691,
             "dchemyakina" to 68788125,
             "ystepanova" to 109115386,
-            "pkarachev" to 3142751
+            "pkarachev" to 3142751,
+            "dshubin" to 138110299
     )
 }

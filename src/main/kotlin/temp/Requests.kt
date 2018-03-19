@@ -3,9 +3,13 @@ package temp
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiException
+import com.vk.api.sdk.exceptions.ApiTooManyException
+import com.vk.api.sdk.exceptions.ClientException
 import com.vk.api.sdk.httpclient.HttpTransportClient
 import com.vk.api.sdk.queries.groups.GroupField
 import java.lang.System.err
+import java.util.*
+import kotlin.collections.HashMap
 
 object Requests {
 
@@ -67,10 +71,94 @@ object Requests {
                 .items.toIntArray()
     }
 
+    fun getGeneralFriends(actor: UserActor, userIdA: Int, userIdB: Int): List<Int> {
+        val friendsA: IntArray = Requests.getFriendsOfUser(actor, userIdA)
+        val friendsB: IntArray = Requests.getFriendsOfUser(actor, userIdB)
+        return friendsA.filter { friendsB.contains(it) }
+    }
+
+    fun findLinks(actor: UserActor, userId: Int): Map<Int, List<Int>> {
+        val result = HashMap<Int, ArrayList<Int>>()
+        val basicLink = Arrays.asList(userId)
+        getFriendsOfUser(actor, userId)
+                .forEach { friendId ->
+                    val link = ArrayList(basicLink)
+                    link.add(friendId)
+                    result[friendId] = link
+                }
+        return result
+    }
+
+    fun findMoreLinks(actor: UserActor, alreadyFound: Map<Int, List<Int>>): Map<Int, List<Int>> {
+        val result = HashMap<Int, ArrayList<Int>>()
+        alreadyFound.keys.forEach { userId ->
+            tryApiOrSkip {
+                getFriendsOfUser(actor, userId)
+                        .filter { friendId ->
+                            !alreadyFound.contains(friendId)
+                        }.forEach { friendId ->
+                            val link = ArrayList(alreadyFound[userId])
+                            link.add(friendId)
+                            result[friendId] = link
+                        }
+            }
+        }
+        return result
+    }
+
     fun userName(actor: UserActor, vararg userIds: String): Map<Int, String> {
-        val users = vk.users().get(actor)
-                .userIds(userIds.toList())
-                .execute()
+        val users = try {
+            tryApi {
+                vk.users().get(actor)
+                        .userIds(userIds.toList())
+                        .execute()
+            }
+        } catch (e: ClientException) {
+            if (userIds.size > 10) {
+                val last = userIds.size - 1
+                val middle = last / 2
+                val userIdsPart1 = userIds.slice(IntRange(0, middle))
+                val resultPart1 = userName(actor, *userIdsPart1.toTypedArray())
+                val userIdsPart2 = userIds.slice(IntRange(middle + 1, last))
+                val resultPart2 = userName(actor, *userIdsPart2.toTypedArray())
+                val result = HashMap<Int, String>()
+                result.putAll(resultPart1)
+                result.putAll(resultPart2)
+                return result
+            } else {
+                throw e
+            }
+        }
         return Utils.userListToMapById(users)
+    }
+
+    fun userListName(actor: UserActor, userIds: List<Any>): Map<Int, String> {
+        return userName(actor, *userIds.map { it.toString() }.toTypedArray())
+    }
+
+    fun <T> tryApi(retryNTimes: Int = 1, action: () -> T): T {
+        var triesLeft = retryNTimes
+        var result: T? = null
+        while (result == null) {
+            try {
+                result = action()
+            } catch (e: ApiTooManyException) {
+                Thread.sleep(200)
+            } catch (e: ApiException) {
+                if (triesLeft-- == 0) {
+                    throw e
+                }
+            }
+        }
+        return result
+    }
+
+    fun <T> tryApiOrSkip(retryNTimes: Int = 1, action: () -> T): T? {
+        return try {
+            tryApi(retryNTimes, action)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

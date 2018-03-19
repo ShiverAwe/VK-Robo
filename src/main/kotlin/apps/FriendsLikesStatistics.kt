@@ -11,15 +11,15 @@ import temp.UserIds
 fun main(args: Array<String>) {
     val code = AuthData.getCode()
     val actor = AuthData.getActor(code)
-    val users: IntArray = Requests.getFriendsOfUser(actor, UserIds.asMap["eneustroeva"]!!)
+//    val users: IntArray = Requests.getFriendsOfUser(actor, UserIds.asMap["eneustroeva"]!!)
 //    val users: IntArray = Requests.getMembersOfGroup(actor, "76477009")
 
-    val userId = UserIds.asMap["yovsyannikova"]!!
+    val userId = UserIds.asMap["vshefer"]!!
 
     val photos: MutableList<Photo> = Requests.vk
             .photos()
             .get(actor)
-            .albumId("218942502")
+            .albumId("profile")
             .ownerId(userId)
             .execute()
             .items
