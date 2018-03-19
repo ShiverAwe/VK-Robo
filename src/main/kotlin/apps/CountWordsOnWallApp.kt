@@ -7,7 +7,7 @@ import temp.*
 fun main(args: Array<String>) {
     val code = AuthData.getCode()
     val actor = AuthData.getActor(code)
-    val userId = UserIds.asMap["yovsyannikova"]
+    val userId = UserIds.asMap["pkarachev"]
 
     val postsFull: MutableList<WallPostFull> = Requests.vk.wall()
             .get(actor)
