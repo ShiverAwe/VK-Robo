@@ -71,41 +71,6 @@ object Requests {
                 .items.toIntArray()
     }
 
-    fun getGeneralFriends(actor: UserActor, userIdA: Int, userIdB: Int): List<Int> {
-        val friendsA: IntArray = Requests.getFriendsOfUser(actor, userIdA)
-        val friendsB: IntArray = Requests.getFriendsOfUser(actor, userIdB)
-        return friendsA.filter { friendsB.contains(it) }
-    }
-
-    fun findLinks(actor: UserActor, userId: Int): Map<Int, List<Int>> {
-        val result = HashMap<Int, ArrayList<Int>>()
-        val basicLink = Arrays.asList(userId)
-        getFriendsOfUser(actor, userId)
-                .forEach { friendId ->
-                    val link = ArrayList(basicLink)
-                    link.add(friendId)
-                    result[friendId] = link
-                }
-        return result
-    }
-
-    fun findMoreLinks(actor: UserActor, alreadyFound: Map<Int, List<Int>>): Map<Int, List<Int>> {
-        val result = HashMap<Int, ArrayList<Int>>()
-        alreadyFound.keys.forEach { userId ->
-            tryApiOrSkip {
-                getFriendsOfUser(actor, userId)
-                        .filter { friendId ->
-                            !alreadyFound.contains(friendId)
-                        }.forEach { friendId ->
-                            val link = ArrayList(alreadyFound[userId])
-                            link.add(friendId)
-                            result[friendId] = link
-                        }
-            }
-        }
-        return result
-    }
-
     fun userName(actor: UserActor, vararg userIds: String): Map<Int, String> {
         val users = try {
             tryApi {
