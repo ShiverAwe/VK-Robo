@@ -8,10 +8,18 @@ class UserTree(
         val actor: UserActor,
         val root: Int
 ) {
-    val total = HashMap<Int, List<Int>>()
-    val rounds = HashMap<Int, Map<Int, List<Int>>>()
-    val names = HashMap<Int, String>()
-    var round: Int = 0
+    private val total = HashMap<Int, List<Int>>()
+    private val rounds = HashMap<Int, Map<Int, List<Int>>>()
+
+    /**
+     * Number of last downloaded round
+     */
+    private var round: Int = 0
+
+    /**
+     * Map user id to nuser name
+     */
+    private val names = HashMap<Int, String>()
 
     /**
      * On round 0 we have only one link from root user to himself
@@ -20,6 +28,7 @@ class UserTree(
         val map0 = HashMap<Int, List<Int>>()
         map0[root] = Arrays.asList(root)
         rounds[0] = map0
+        total.putAll(map0)
     }
 
     fun nextRound() {
@@ -32,6 +41,10 @@ class UserTree(
         total.putAll(foundLinks)
     }
 
+    private fun nameFor(userId: Int): String {
+        return names.getOrDefault(userId, userId.toString())
+    }
+
     private fun findLinks(actor: UserActor, userIds: List<Int>): Map<Int, List<Int>> {
         val result = HashMap<Int, ArrayList<Int>>()
         val alreadyFound = total.keys
@@ -41,13 +54,19 @@ class UserTree(
                         .filter { friendId ->
                             !alreadyFound.contains(friendId)
                         }.forEach { friendId ->
-                            val link = ArrayList(total[userId])
+                            val link = ArrayList(total[userId].orEmpty())
                             link.add(friendId)
                             result[friendId] = link
                         }
             }
         }
         return result
+    }
+
+    fun print() {
+        rounds[round]!!.forEach { entry ->
+            println("""${nameFor(entry.key)} : ${entry.value.map { nameFor(it) }}""")
+        }
     }
 
 

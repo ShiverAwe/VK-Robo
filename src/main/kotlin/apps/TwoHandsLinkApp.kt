@@ -13,8 +13,15 @@ fun main(args: Array<String>) {
 
     val tree = UserTree(actor, userIdA)
 
+
+
     tree.nextRound()
 
+    tree.print()
+
+    tree.nextRound()
+
+    tree.print()
 
 
 }
