@@ -3,8 +3,8 @@ package apps
 import com.vk.api.sdk.objects.photos.Photo
 import com.vk.api.sdk.objects.users.UserMin
 import com.vk.api.sdk.queries.likes.LikesType
+import lib.Counter
 import temp.AuthData
-import temp.Counter
 import temp.Requests
 import temp.UserIds
 
@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
         Thread.sleep(500)
     }
 
-    counter.print()
+    println(counter)
 }
 
 

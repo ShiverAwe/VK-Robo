@@ -2,7 +2,11 @@ package apps
 
 import com.vk.api.sdk.objects.wall.WallPostFull
 import com.vk.api.sdk.queries.wall.WallGetFilter
-import temp.*
+import lib.Counter
+import temp.AuthData
+import temp.Requests
+import temp.UserIds
+import temp.Utils
 
 fun main(args: Array<String>) {
     val code = AuthData.getCode()
@@ -27,5 +31,5 @@ fun main(args: Array<String>) {
         counterTotal = counterTotal.merge(counter)
     }
 
-    counterTotal.print()
+    println(counterTotal)
 }

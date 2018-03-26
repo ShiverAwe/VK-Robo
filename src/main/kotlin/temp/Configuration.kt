@@ -1,30 +1,17 @@
 package temp
 
-import java.util.*
+import lib.PropertiesInstrumented
 
-object Configuration {
+object Configuration : PropertiesInstrumented("secret.properties") {
 
-    val userToken: String
-        get() = properties.getProperty("user_access_token")
+    val userToken: String = property("user_access_token")
 
-    val userId: String
-        get() = properties.getProperty("user_id")
+    val userId: String = property("user_id")
 
-    val appId: String
-        get() = properties.getProperty("app_id")
+    val appId: String = property("app_id")
 
-    val appSecret: String
-        get() = properties.getProperty("app_client_secret")
+    val appSecret: String = property("app_client_secret")
 
-    val appRedirectUri: String
-        get() = properties.getProperty("app_redirect_uri")
-
-    private val properties: Properties = Properties()
-
-    init {
-        this.javaClass.getResourceAsStream("secret.properties").use {
-            properties.load(it)
-        }
-    }
+    val appRedirectUri: String = property("app_redirect_uri")
 
 }
