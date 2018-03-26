@@ -15,3 +15,4 @@ gradlew
 
 # Credentials for vk app
 vk_app.properties
+secret.properties

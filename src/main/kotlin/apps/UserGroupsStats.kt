@@ -6,9 +6,8 @@ import temp.UserIds
 import temp.Utils
 
 fun main(args: Array<String>) {
-    val code = AuthData.getCode()
-    val actor = AuthData.getActor(code)
-    val serviceActor = AuthData.getServiceActor()
+    //val code = AuthData.getCode()
+    val actor = AuthData.getActor()
     val users: IntArray = Requests.getFriendsOfUser(actor, UserIds.asMap["eneustroeva"]!!)
 //    val users: IntArray = Requests.getMembersOfGroup(actor, "76477009")
 
