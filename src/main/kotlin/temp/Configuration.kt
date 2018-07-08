@@ -2,7 +2,7 @@ package temp
 
 import lib.PropertiesInstrumented
 
-object Configuration : PropertiesInstrumented("secret.properties") {
+object Configuration : PropertiesInstrumented("/secret.properties") {
 
     val userToken: String = property("user_access_token")
 

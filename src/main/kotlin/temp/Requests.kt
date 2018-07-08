@@ -3,10 +3,10 @@ package temp
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiException
-import com.vk.api.sdk.exceptions.ApiTooManyException
 import com.vk.api.sdk.exceptions.ClientException
 import com.vk.api.sdk.httpclient.HttpTransportClient
 import com.vk.api.sdk.queries.groups.GroupField
+import temp.Utils.retry
 import java.lang.System.err
 import java.util.*
 import kotlin.collections.HashMap
@@ -54,10 +54,10 @@ object Requests {
     }
 
 
-    fun <K, T> List<T>.mapFor(action: T.() -> K): Map<K, T> {
+    fun <K, T> List<T>.mapFor(mapping: T.() -> K): Map<K, T> {
         val map = HashMap<K, T>()
         forEach {
-            map.put(it.action(), it)
+            map[it.mapping()] = it
         }
         return map
     }
@@ -73,7 +73,7 @@ object Requests {
 
     fun userName(actor: UserActor, vararg userIds: String): Map<Int, String> {
         val users = try {
-            tryApi {
+            retry {
                 vk.users().get(actor)
                         .userIds(userIds.toList())
                         .execute()
@@ -101,29 +101,4 @@ object Requests {
         return userName(actor, *userIds.map { it.toString() }.toTypedArray())
     }
 
-    fun <T> tryApi(retryNTimes: Int = 1, action: () -> T): T {
-        var triesLeft = retryNTimes
-        var result: T? = null
-        while (result == null) {
-            try {
-                result = action()
-            } catch (e: ApiTooManyException) {
-                Thread.sleep(200)
-            } catch (e: ApiException) {
-                if (triesLeft-- == 0) {
-                    throw e
-                }
-            }
-        }
-        return result
-    }
-
-    fun <T> tryApiOrSkip(retryNTimes: Int = 1, action: () -> T): T? {
-        return try {
-            tryApi(retryNTimes, action)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 }

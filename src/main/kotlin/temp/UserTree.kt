@@ -1,6 +1,7 @@
 package temp
 
 import com.vk.api.sdk.client.actors.UserActor
+import temp.Utils.retryOrSkip
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -49,7 +50,7 @@ class UserTree(
         val result = HashMap<Int, ArrayList<Int>>()
         val alreadyFound = total.keys
         userIds.forEach { userId ->
-            Requests.tryApiOrSkip {
+            retryOrSkip {
                 Requests.getFriendsOfUser(actor, userId)
                         .filter { friendId ->
                             !alreadyFound.contains(friendId)

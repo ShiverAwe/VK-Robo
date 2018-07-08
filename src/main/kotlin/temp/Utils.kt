@@ -1,5 +1,7 @@
 package temp
 
+import com.vk.api.sdk.exceptions.ApiException
+import com.vk.api.sdk.exceptions.ApiTooManyException
 import com.vk.api.sdk.objects.users.UserXtrCounters
 import java.util.*
 import kotlin.collections.HashMap
@@ -25,5 +27,32 @@ object Utils {
                 .split("""[^a-zA-Z0-9а-яА-Я]""".toRegex())
                 .filter { it.isNotEmpty() }
                 .map { it.toLowerCase() }
+    }
+
+
+    fun <T> retry(retryNTimes: Int = 1, action: () -> T): T {
+        var triesLeft = retryNTimes
+        var result: T? = null
+        while (result == null) {
+            try {
+                result = action()
+            } catch (e: ApiTooManyException) {
+                Thread.sleep(200)
+            } catch (e: ApiException) {
+                if (triesLeft-- == 0) {
+                    throw e
+                }
+            }
+        }
+        return result
+    }
+
+    fun <T> retryOrSkip(retryNTimes: Int = 1, action: () -> T): T? {
+        return try {
+            retry(retryNTimes, action)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }
