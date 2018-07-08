@@ -1,20 +1,24 @@
-# Gradle files
-.gradle/
-gradle/
-settings.gradle
-gradlew
-gradlew.bat
-
 # Class files
+build/
 out/
 target/
 
-# IDE fies
-.idea/
+# IDEA files
 *.iml
 *.ipr
-build/
+.idea/
+
+# Gradle files
+.gradle/
+gradle/
+gradlew.bat
+gradlew
+settings.gradle
 
 # Main classes
 Main.java
 Main.kt
+
+# Credentials for vk app
+vk_app.properties
+secret.properties
