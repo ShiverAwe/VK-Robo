@@ -1,13 +1,20 @@
+# Gradle files
 .gradle/
 gradle/
 settings.gradle
 gradlew
 gradlew.bat
 
-
+# Class files
 out/
 target/
 
+# IDE fies
 .idea/
 *.iml
 *.ipr
+build/
+
+# Main classes
+Main.java
+Main.kt
