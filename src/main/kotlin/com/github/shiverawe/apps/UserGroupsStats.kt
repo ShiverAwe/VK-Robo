@@ -1,9 +1,9 @@
-package apps
+package com.github.shiverawe.apps
 
-import temp.AuthData
-import temp.Requests
-import temp.UserIds
-import temp.Utils
+import com.github.shiverawe.temp.AuthData
+import com.github.shiverawe.temp.Requests
+import com.github.shiverawe.temp.UserIds
+import com.github.shiverawe.temp.Utils
 
 fun main(args: Array<String>) {
     //val code = AuthData.getCode()

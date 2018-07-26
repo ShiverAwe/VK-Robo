@@ -1,8 +1,8 @@
-package apps
+package com.github.shiverawe.apps
 
-import temp.AuthData
-import temp.Requests
-import temp.UserIds
+import com.github.shiverawe.temp.AuthData
+import com.github.shiverawe.temp.Requests
+import com.github.shiverawe.temp.UserIds
 
 
 fun main(args: Array<String>) {

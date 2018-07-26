@@ -1,4 +1,4 @@
-package lib
+package com.github.shiverawe.lib
 
 /**
  * This class counts equal elements, given to it.

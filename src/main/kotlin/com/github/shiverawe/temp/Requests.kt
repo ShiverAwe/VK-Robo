@@ -1,12 +1,12 @@
-package temp
+package com.github.shiverawe.temp
 
+import com.github.shiverawe.temp.Utils.retry
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.exceptions.ClientException
 import com.vk.api.sdk.httpclient.HttpTransportClient
 import com.vk.api.sdk.queries.groups.GroupField
-import temp.Utils.retry
 import java.lang.System.err
 import java.util.*
 import kotlin.collections.HashMap

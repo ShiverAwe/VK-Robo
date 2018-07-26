@@ -1,4 +1,4 @@
-package temp
+package com.github.shiverawe.temp
 
 object UserIds {
     val asMap = mapOf(

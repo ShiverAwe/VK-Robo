@@ -1,12 +1,12 @@
-package apps
+package com.github.shiverawe.apps
 
+import com.github.shiverawe.lib.Counter
+import com.github.shiverawe.temp.AuthData
+import com.github.shiverawe.temp.Requests
+import com.github.shiverawe.temp.UserIds
+import com.github.shiverawe.temp.Utils
 import com.vk.api.sdk.objects.wall.WallPostFull
 import com.vk.api.sdk.queries.wall.WallGetFilter
-import lib.Counter
-import temp.AuthData
-import temp.Requests
-import temp.UserIds
-import temp.Utils
 
 fun main(args: Array<String>) {
     val code = AuthData.getCode()

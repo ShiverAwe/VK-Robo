@@ -1,12 +1,12 @@
-package apps
+package com.github.shiverawe.apps
 
+import com.github.shiverawe.lib.Counter
+import com.github.shiverawe.temp.AuthData
+import com.github.shiverawe.temp.Requests
+import com.github.shiverawe.temp.UserIds
 import com.vk.api.sdk.objects.photos.Photo
 import com.vk.api.sdk.objects.users.UserMin
 import com.vk.api.sdk.queries.likes.LikesType
-import lib.Counter
-import temp.AuthData
-import temp.Requests
-import temp.UserIds
 
 fun main(args: Array<String>) {
     val code = AuthData.getCode()
