@@ -54,6 +54,19 @@ object AuthData {
         return map
     }
 
+
+    /**
+     * This method opens a URL to get user access code.
+     */
+    private fun openAuthPage(responseType: String) {
+        val reqUrl = authUrl(responseType)
+        println(reqUrl)
+        Desktop.getDesktop().browse(URL(reqUrl).toURI())
+    }
+
+    /**
+     * This method returns a URL to get user access code.
+     */
     private fun authUrl(responseType: String) = ("https://oauth.vk.com/authorize"
             + "?client_id=${Configuration.appId}"
             + "&scope=${PERMISSIONS}"
@@ -61,11 +74,5 @@ object AuthData {
             + "&display=${DISPLAY}"
             + "&v=${API_VERSION}"
             + "&response_type=${responseType}")
-
-    private fun openAuthPage(responseType: String) {
-        val reqUrl = authUrl(responseType)
-        println(reqUrl)
-        Desktop.getDesktop().browse(URL(reqUrl).toURI())
-    }
 
 }
