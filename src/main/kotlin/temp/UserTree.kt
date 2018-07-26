@@ -6,7 +6,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class UserTree(
-        val actor: UserActor,
+        private val actor: UserActor,
         val root: Int
 ) {
     private val total = HashMap<Int, List<Int>>()
@@ -18,7 +18,7 @@ class UserTree(
     private var round: Int = 0
 
     /**
-     * Map user id to nuser name
+     * Map user id to user name
      */
     private val names = HashMap<Int, String>()
 
