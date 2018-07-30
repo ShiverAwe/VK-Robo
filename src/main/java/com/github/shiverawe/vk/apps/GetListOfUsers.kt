@@ -1,8 +1,7 @@
-package com.github.shiverawe.apps
+package com.github.shiverawe.vk.apps
 
-import com.github.shiverawe.temp.AuthData
-import com.github.shiverawe.temp.Requests
-
+import com.github.shiverawe.vk.temp.AuthData
+import com.github.shiverawe.vk.temp.Requests
 
 fun main(args: Array<String>) {
     val code = AuthData.getCode()

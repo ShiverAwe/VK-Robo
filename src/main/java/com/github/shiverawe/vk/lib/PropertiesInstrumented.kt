@@ -1,4 +1,4 @@
-package com.github.shiverawe.lib
+package com.github.shiverawe.vk.lib
 
 import java.util.*
 

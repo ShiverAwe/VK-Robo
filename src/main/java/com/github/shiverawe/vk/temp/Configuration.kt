@@ -1,6 +1,6 @@
-package com.github.shiverawe.temp
+package com.github.shiverawe.vk.temp
 
-import com.github.shiverawe.lib.PropertiesInstrumented
+import com.github.shiverawe.vk.lib.PropertiesInstrumented
 
 object Configuration : PropertiesInstrumented("/secret.properties") {
 

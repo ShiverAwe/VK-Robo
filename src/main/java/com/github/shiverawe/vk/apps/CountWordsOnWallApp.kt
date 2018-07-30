@@ -1,10 +1,10 @@
-package com.github.shiverawe.apps
+package com.github.shiverawe.vk.apps
 
-import com.github.shiverawe.lib.Counter
-import com.github.shiverawe.temp.AuthData
-import com.github.shiverawe.temp.Requests
-import com.github.shiverawe.temp.UserIds
-import com.github.shiverawe.temp.Utils
+import com.github.shiverawe.vk.lib.Counter
+import com.github.shiverawe.vk.temp.AuthData
+import com.github.shiverawe.vk.temp.Requests
+import com.github.shiverawe.vk.temp.UserIds
+import com.github.shiverawe.vk.temp.Utils
 import com.vk.api.sdk.objects.wall.WallPostFull
 import com.vk.api.sdk.queries.wall.WallGetFilter
 

@@ -1,4 +1,4 @@
-package com.github.shiverawe.temp
+package com.github.shiverawe.vk.temp
 
 import com.vk.api.sdk.client.actors.UserActor
 import java.awt.Desktop
