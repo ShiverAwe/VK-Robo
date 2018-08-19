@@ -3,6 +3,8 @@ package com.github.shiverawe.vk.apps
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
 import com.github.shiverawe.vk.util.parseInts
+import com.vk.api.sdk.client.actors.UserActor
+import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.*
 
 fun main(args: Array<String>) {
@@ -14,34 +16,19 @@ fun main(args: Array<String>) {
     val usersActive: List<Int> = usersTarget.subtract(usersExcluded).toList().reversed()
     val usersSuccess: MutableList<Int> = ArrayList()
 
-
     var TTL = 30
     try {
-        usersActive
-                .forEach { userId ->
-                    val friendStatus = Requests.vk
-                            .friends()
-                            .areFriends(actor, userId)
-                            .execute()
-                            .get(0)
-                            .friendStatus
-                    when (friendStatus) {
-                        NOT_A_FRIEND, INCOMING_REQUEST -> {
-                            Requests.vk
-                                    .friends()
-                                    .add(actor, userId)
-                                    .execute()
-                            println("ID $userId : Adding...")
-                            TTL--
-                            usersSuccess.add(userId)
-                            Thread.sleep(5000)
-                        }
-                        IS_FRIEND -> println("ID $userId : Already friends")
-                        OUTCOMING_REQUEST -> println("ID $userId : Outcoming friends")
-                    }
-                    Thread.sleep(400)
-                }
+        usersActive.forEach { userId ->
+            val added = addFriend(actor, userId)
+            if (added) {
+                usersSuccess.add(userId)
+                TTL--
+            }
+            Thread.sleep(500)
+        }
         if (TTL <= 0) throw RuntimeException("TTL ENDED")
+    } catch (e: ApiException) {
+        e.printStackTrace()
     } catch (e: Exception) {
         e.printStackTrace()
     }
@@ -50,4 +37,22 @@ fun main(args: Array<String>) {
 
 }
 
-
+fun addFriend(actor: UserActor, userId: Int): Boolean {
+    val friendStatus = Requests.vk
+            .friends()
+            .areFriends(actor, userId)
+            .execute()
+            .get(0)
+            .friendStatus
+    @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
+    return when (friendStatus) {
+        NOT_A_FRIEND, INCOMING_REQUEST -> {
+            Requests.vk
+                    .friends()
+                    .add(actor, userId)
+                    .execute()
+            true
+        }
+        IS_FRIEND, OUTCOMING_REQUEST -> false
+    }
+}
