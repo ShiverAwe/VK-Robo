@@ -1,6 +1,7 @@
 package com.github.shiverawe.vk.temp
 
-import com.github.shiverawe.vk.temp.Utils.retry
+import com.github.shiverawe.vk.util.Utils
+import com.github.shiverawe.vk.util.Utils.retry
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiException

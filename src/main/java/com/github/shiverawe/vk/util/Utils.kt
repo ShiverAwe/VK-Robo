@@ -1,4 +1,4 @@
-package com.github.shiverawe.vk.temp
+package com.github.shiverawe.vk.util
 
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.exceptions.ApiTooManyException

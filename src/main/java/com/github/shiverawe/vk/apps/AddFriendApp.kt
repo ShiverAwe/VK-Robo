@@ -2,14 +2,15 @@ package com.github.shiverawe.vk.apps
 
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
+import com.github.shiverawe.vk.util.parseInts
 import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.*
 
 fun main(args: Array<String>) {
     fun requiredInput(): String = readLine().orEmpty()
     val code = requiredInput()//AuthData.getCode()
     val actor = AuthData.getActor(code)
-    val usersTarget: List<Int> = requiredInput().toInts()
-    val usersExcluded: List<Int> = requiredInput().toInts()
+    val usersTarget: List<Int> = requiredInput().parseInts()
+    val usersExcluded: List<Int> = requiredInput().parseInts()
     val usersActive: List<Int> = usersTarget.subtract(usersExcluded).toList().reversed()
     val usersSuccess: MutableList<Int> = ArrayList()
 
@@ -50,8 +51,3 @@ fun main(args: Array<String>) {
 }
 
 
-fun String.toInts(): List<Int> = this
-        .split(",")
-        .map { it.trim() }
-        .filter { !it.isBlank() }
-        .map { it.toInt() }

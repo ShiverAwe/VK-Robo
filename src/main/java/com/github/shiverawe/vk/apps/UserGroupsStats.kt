@@ -3,7 +3,7 @@ package com.github.shiverawe.vk.apps
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
 import com.github.shiverawe.vk.temp.UserIds
-import com.github.shiverawe.vk.temp.Utils
+import com.github.shiverawe.vk.util.Utils
 
 fun main(args: Array<String>) {
     //val code = AuthData.getCode()
