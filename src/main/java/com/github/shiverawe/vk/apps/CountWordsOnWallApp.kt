@@ -10,8 +10,13 @@ import com.vk.api.sdk.queries.wall.WallGetFilter
 
 fun main(args: Array<String>) {
     val code = AuthData.getCode()
-    val actor = AuthData.getActor(code)
-    val userId = UserIds.asMap["pkarachev"]
+    val userId = UserIds.asMap["pkarachev"]!!
+    val counter = countWordsOnWall(userId, code)
+    println(counter)
+}
+
+fun countWordsOnWall(userId: Int, accessCode: String): Counter<String> {
+    val actor = AuthData.getActor(accessCode)
 
     val postsFull: MutableList<WallPostFull> = Requests.vk.wall()
             .get(actor)
@@ -31,5 +36,5 @@ fun main(args: Array<String>) {
         counterTotal = counterTotal.merge(counter)
     }
 
-    println(counterTotal)
+    return counterTotal
 }
