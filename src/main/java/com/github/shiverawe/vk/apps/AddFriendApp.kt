@@ -6,7 +6,8 @@ import com.github.shiverawe.vk.util.Utils
 import com.github.shiverawe.vk.util.parseInts
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiCaptchaException
-import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.*
+import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.INCOMING_REQUEST
+import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.NOT_A_FRIEND
 
 fun main(args: Array<String>) {
     fun requiredInput(): String = readLine().orEmpty()
@@ -46,28 +47,29 @@ fun addFriend(actor: UserActor, userId: Int): Boolean {
             .execute()
             .get(0)
             .friendStatus
-    @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
     return when (friendStatus) {
         NOT_A_FRIEND, INCOMING_REQUEST -> {
-            val capcha = Utils.tryWithCapcha {
-                Requests.vk
-                        .friends()
-                        .add(actor, userId)
-                        .execute()
-            }
-            when (capcha) {
+            val captcha =
+                    Utils.tryOrCaptcha {
+                        Requests.vk
+                                .friends()
+                                .add(actor, userId)
+                                .execute()
+                    }
+            when (captcha?.key) {
                 null -> Unit
-                else -> {
+                "exit" -> throw RuntimeException("Exit on captcha.")
+                else -> Utils.retryOrSkip(5) {
                     Requests.vk
                             .friends()
                             .add(actor, userId)
-                            .captchaKey(capcha.key)
-                            .captchaSid(capcha.sid)
+                            .captchaKey(captcha.key)
+                            .captchaSid(captcha.sid)
                             .execute()
                 }
             }
             true
         }
-        IS_FRIEND, OUTCOMING_REQUEST -> false
+        else -> false
     }
 }

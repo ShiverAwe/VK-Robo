@@ -1,6 +1,6 @@
 package com.github.shiverawe.vk.util
 
-import com.github.shiverawe.vk.model.Capcha
+import com.github.shiverawe.vk.captcha.VkCaptcha
 import com.vk.api.sdk.exceptions.ApiCaptchaException
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.exceptions.ApiTooManyException
@@ -60,13 +60,13 @@ object Utils {
         }
     }
 
-    fun tryWithCapcha(action: () -> Unit): Capcha? {
+    fun tryOrCaptcha(action: () -> Unit): VkCaptcha? {
         return try {
             action()
             null
         } catch (e: ApiCaptchaException) {
             Desktop.getDesktop().browse(URL(e.image).toURI())
-            return Capcha(key = readLine()!!, sid = e.sid)
+            return VkCaptcha(key = readLine()!!, sid = e.sid)
         }
     }
 }
