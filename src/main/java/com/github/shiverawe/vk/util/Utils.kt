@@ -1,8 +1,12 @@
 package com.github.shiverawe.vk.util
 
+import com.github.shiverawe.vk.model.Capcha
+import com.vk.api.sdk.exceptions.ApiCaptchaException
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.exceptions.ApiTooManyException
 import com.vk.api.sdk.objects.users.UserXtrCounters
+import java.awt.Desktop
+import java.net.URL
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -53,6 +57,16 @@ object Utils {
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    fun tryWithCapcha(action: () -> Unit): Capcha? {
+        return try {
+            action()
+            null
+        } catch (e: ApiCaptchaException) {
+            Desktop.getDesktop().browse(URL(e.image).toURI())
+            return Capcha(key = readLine()!!, sid = e.sid)
         }
     }
 }
