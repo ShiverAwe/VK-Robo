@@ -1,5 +1,7 @@
 package com.github.shiverawe.vk.apps
 
+import com.github.shiverawe.vk.captcha.ManualVkCaptchaResolver
+import com.github.shiverawe.vk.captcha.VkCaptchaResolver
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
 import com.github.shiverawe.vk.util.Utils
@@ -40,6 +42,8 @@ fun main(args: Array<String>) {
 
 }
 
+val captchaResolver: VkCaptchaResolver = ManualVkCaptchaResolver()
+
 fun addFriend(actor: UserActor, userId: Int): Boolean {
     val friendStatus = Requests.vk
             .friends()
@@ -49,22 +53,21 @@ fun addFriend(actor: UserActor, userId: Int): Boolean {
             .friendStatus
     return when (friendStatus) {
         NOT_A_FRIEND, INCOMING_REQUEST -> {
-            val captcha =
+            val captchaSid =
                     Utils.tryOrCaptcha {
                         Requests.vk
                                 .friends()
                                 .add(actor, userId)
                                 .execute()
                     }
-            when (captcha?.key) {
+            when (captchaSid) {
                 null -> Unit
-                "exit" -> throw RuntimeException("Exit on captcha.")
                 else -> Utils.retryOrSkip(5) {
                     Requests.vk
                             .friends()
                             .add(actor, userId)
-                            .captchaKey(captcha.key)
-                            .captchaSid(captcha.sid)
+                            .captchaKey(captchaResolver.resolve(captchaSid))
+                            .captchaSid(captchaSid)
                             .execute()
                 }
             }
