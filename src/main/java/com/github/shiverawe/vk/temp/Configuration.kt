@@ -14,4 +14,6 @@ object Configuration : PropertiesInstrumented("/secret.properties") {
 
     val appRedirectUri: String = property("app_redirect_uri")
 
+    val rucaptchaKey: String = property("rucaptcha_key")
+
 }
