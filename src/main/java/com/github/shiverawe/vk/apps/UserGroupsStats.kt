@@ -3,20 +3,12 @@ package com.github.shiverawe.vk.apps
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
 import com.github.shiverawe.vk.temp.UserIds
-import com.github.shiverawe.vk.util.Utils
+import com.github.shiverawe.vk.util.printMapSorted
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.queries.groups.GroupField
 import java.util.HashSet
 import kotlin.collections.HashMap
-import kotlin.collections.Map
-import kotlin.collections.Set
-import kotlin.collections.filter
-import kotlin.collections.forEach
-import kotlin.collections.getOrPut
-import kotlin.collections.map
-import kotlin.collections.toSet
-import kotlin.collections.toTypedArray
 
 fun main(args: Array<String>) {
     //val code = AuthData.getCode()
@@ -27,7 +19,7 @@ fun main(args: Array<String>) {
 //    val data = Requests.getGroupsOfUsers(actor, *UserIds.asMap.values.toIntArray())
     val data = getGroupsOfUsers(actor, *users)
 
-    Utils.printMapSorted(data.filter { it.value.size > 1 }) { v1, v2 -> v2.size - v1.size }
+    printMapSorted(data.filter { it.value.size > 1 }) { v1, v2 -> v2.size - v1.size }
 }
 
 /**

@@ -4,8 +4,9 @@ import com.github.shiverawe.vk.captcha.ManualVkCaptchaResolver
 import com.github.shiverawe.vk.captcha.VkCaptchaResolver
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
-import com.github.shiverawe.vk.util.Utils
 import com.github.shiverawe.vk.util.parseInts
+import com.github.shiverawe.vk.util.retryOrSkip
+import com.github.shiverawe.vk.util.tryOrCaptcha
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ApiCaptchaException
 import com.vk.api.sdk.objects.friends.FriendStatusFriendStatus.INCOMING_REQUEST
@@ -54,15 +55,12 @@ fun addFriend(actor: UserActor, userId: Int): Boolean {
     return when (friendStatus) {
         NOT_A_FRIEND, INCOMING_REQUEST -> {
             val captchaSid =
-                    Utils.tryOrCaptcha {
-                        Requests.vk
-                                .friends()
-                                .add(actor, userId)
-                                .execute()
+                    tryOrCaptcha {
+                        Requests.vk.friends().add(actor, userId).execute()
                     }
             when (captchaSid) {
                 null -> Unit
-                else -> Utils.retryOrSkip(5) {
+                else -> retryOrSkip(5) {
                     Requests.vk
                             .friends()
                             .add(actor, userId)

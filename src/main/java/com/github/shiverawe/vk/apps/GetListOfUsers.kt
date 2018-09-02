@@ -2,8 +2,8 @@ package com.github.shiverawe.vk.apps
 
 import com.github.shiverawe.vk.temp.AuthData
 import com.github.shiverawe.vk.temp.Requests
-import com.github.shiverawe.vk.util.Utils
 import com.github.shiverawe.vk.util.parseList
+import com.github.shiverawe.vk.util.retry
 import com.vk.api.sdk.client.actors.UserActor
 
 fun main(args: Array<String>) {
@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 
     val usersUnfiltered = arrayListOf<Int>()
     groupIds.forEach { groupId ->
-        val groupUsers = Utils.retry(5) {
+        val groupUsers = retry(5) {
             getUsersOfGroup(groupId, actor)
                     .filter { usersUnfiltered.contains(it).not() }
         }

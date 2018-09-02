@@ -1,6 +1,6 @@
 package com.github.shiverawe.vk.temp
 
-import com.github.shiverawe.vk.util.Utils.retryOrSkip
+import com.github.shiverawe.vk.util.retryOrSkip
 import com.vk.api.sdk.client.actors.UserActor
 import java.util.*
 import kotlin.collections.HashMap

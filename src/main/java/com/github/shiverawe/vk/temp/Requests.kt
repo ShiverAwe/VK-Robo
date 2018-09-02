@@ -1,7 +1,7 @@
 package com.github.shiverawe.vk.temp
 
-import com.github.shiverawe.vk.util.Utils
-import com.github.shiverawe.vk.util.Utils.retry
+import com.github.shiverawe.vk.util.retry
+import com.github.shiverawe.vk.util.userListToMapById
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.UserActor
 import com.vk.api.sdk.exceptions.ClientException
@@ -53,7 +53,7 @@ object Requests {
                 throw e
             }
         }
-        return Utils.userListToMapById(users)
+        return userListToMapById(users)
     }
 
     fun userListName(actor: UserActor, userIds: List<Any>): Map<Int, String> {
