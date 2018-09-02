@@ -55,8 +55,12 @@ fun addFriend(actor: UserActor, userId: Int): Boolean {
     return when (friendStatus) {
         NOT_A_FRIEND, INCOMING_REQUEST -> {
             val captchaSid =
-                    tryOrCaptcha {
-                        Requests.vk.friends().add(actor, userId).execute()
+                    try {
+                        tryOrCaptcha {
+                            Requests.vk.friends().add(actor, userId).execute()
+                        }
+                    } catch (e: Exception) {
+                        null
                     }
             when (captchaSid) {
                 null -> Unit
