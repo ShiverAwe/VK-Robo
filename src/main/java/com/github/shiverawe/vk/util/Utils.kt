@@ -1,6 +1,5 @@
 package com.github.shiverawe.vk.util
 
-import com.vk.api.sdk.exceptions.ApiCaptchaException
 import com.vk.api.sdk.exceptions.ApiException
 import com.vk.api.sdk.exceptions.ApiTooManyException
 import com.vk.api.sdk.objects.users.UserXtrCounters
@@ -53,14 +52,5 @@ fun <T> retryOrSkip(retryNTimes: Int = 1, action: () -> T): T? {
     } catch (e: Exception) {
         e.printStackTrace()
         null
-    }
-}
-
-fun tryOrCaptcha(action: () -> Unit): String? {
-    return try {
-        action()
-        null
-    } catch (e: ApiCaptchaException) {
-        return e.sid
     }
 }
